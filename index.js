@@ -50,6 +50,7 @@ async function run() {
     const ServiceCollection = client.db('hotelDB').collection('services');
     const reviewCollection = client.db('hotelDB').collection('reviews');
     const bookingCollection = client.db('hotelDB').collection('bookings');
+    const userReviewCollection = client.db('hotelDB').collection('userReview');
     // jwt related api
     // for login
     app.post('/jwt', async (req, res) => {
@@ -115,11 +116,11 @@ async function run() {
       const filter = { _id: new ObjectId(id) };
       const updateDoc = {
         $set: {
-          review: data.review,
           available_rooms: data.available_rooms,
           email: data.email,
           date: data.date,
           customerName: data.customerName,
+          roomId: data.roomId,
         },
       };
       const options = { upsert: true };
@@ -178,33 +179,65 @@ async function run() {
       const result = await cursor.toArray();
       res.send(result);
     });
-    // update review and rating in
-    app.patch('/services/s/:roomName', async (req, res) => {
-      const roomName = req.body.roomName;
+
+    // post userReview
+    app.post('/userReview', async (req, res) => {
+      const userReview = req.body;
+      const result = await userReviewCollection.insertOne(userReview);
+      res.send(result);
+    });
+    // get userReview for details page
+    app.get('/userReview', async (req, res) => {
+      const cursor = userReviewCollection.find();
+      const result = await cursor.toArray();
+      res.send(result);
+    });
+    // update date in booking page
+    app.patch('/bookings/s/:id', async (req, res) => {
+      const id = req.params.id;
       const data = req.body;
       console.log(data);
-      const filter = { room_name: roomName };
+      const filter = { _id: new ObjectId(id) };
       const updateDoc = {
         $set: {
-          review: data.review,
-          rating: data.rating,
+          date: data.date,
         },
       };
       const options = { upsert: true };
-      const result = await ServiceCollection.updateOne(
+      const result = await bookingCollection.updateOne(
         filter,
         updateDoc,
         options
       );
       res.send(result);
     });
+    // update review and rating in
+    // app.patch('/services/s/:id', async (req, res) => {
+    //   const id = req.params.id;
+    //   const data = req.body;
+    //   console.log(data);
+    //   const filter = { roomId: id };
+    //   const updateDoc = {
+    //     $set: {
+    //       review: data.review,
+    //       rating: data.rating,
+    //     },
+    //   };
+    //   const options = { upsert: true };
+    //   const result = await ServiceCollection.updateOne(
+    //     filter,
+    //     updateDoc,
+    //     options
+    //   );
+    //   res.send(result);
+    // });
     // get one data for update
-    app.get('/services/s/:roomName', async (req, res) => {
-      const roomName = req.body.roomName;
-      const query = { room_name: roomName };
-      const result = await ServiceCollection.findOne(query);
-      res.send(result);
-    });
+    // app.get('/services/s/:id', async (req, res) => {
+    //   const id = req.params.id;
+    //   const query = { roomId: id };
+    //   const result = await ServiceCollection.findOne(query);
+    //   res.send(result);
+    // });
 
     await client.db('admin').command({ ping: 1 });
     console.log(
