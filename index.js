@@ -158,6 +158,13 @@ async function run() {
       const result = await bookingCollection.find(query).toArray();
       res.send(result);
     });
+    // get one bookings data
+    app.get('/bookings/:id', async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await bookingCollection.findOne(query);
+      res.send(result);
+    });
     // Delete data api
     app.delete('/bookings/:id', async (req, res) => {
       const id = req.params.id;
@@ -171,6 +178,34 @@ async function run() {
       const result = await cursor.toArray();
       res.send(result);
     });
+    // update review and rating in
+    app.patch('/services/s/:roomName', async (req, res) => {
+      const roomName = req.body.roomName;
+      const data = req.body;
+      console.log(data);
+      const filter = { room_name: roomName };
+      const updateDoc = {
+        $set: {
+          review: data.review,
+          rating: data.rating,
+        },
+      };
+      const options = { upsert: true };
+      const result = await ServiceCollection.updateOne(
+        filter,
+        updateDoc,
+        options
+      );
+      res.send(result);
+    });
+    // get one data for update
+    app.get('/services/s/:roomName', async (req, res) => {
+      const roomName = req.body.roomName;
+      const query = { room_name: roomName };
+      const result = await ServiceCollection.findOne(query);
+      res.send(result);
+    });
+
     await client.db('admin').command({ ping: 1 });
     console.log(
       'Pinged your deployment. You successfully connected to MongoDB!'
