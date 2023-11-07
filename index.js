@@ -219,59 +219,6 @@ async function run() {
       res.send(result);
     });
 
-    // get only first 6 data for home page
-    // app.get('/services/s', async (req, res) => {
-    //   let sortObj = {};
-
-    //   const sortField = req.query.sortField;
-    //   const sortOrder = req.query.sortOrder;
-
-    //   const limit = 6;
-
-    //   const skip = 0;
-
-    //   if (sortField && sortOrder) {
-    //     sortObj[sortField] = sortOrder;
-    //   }
-
-    //   const cursor = ServiceCollection.find()
-    //     .skip(skip)
-    //     .limit(limit)
-    //     .sort(sortObj);
-
-    //   const result = await cursor.toArray();
-    //   const total = await ServiceCollection.countDocuments();
-    //   res.send({ total, result });
-    // });
-
-    // update review and rating in
-    // app.patch('/services/s/:id', async (req, res) => {
-    //   const id = req.params.id;
-    //   const data = req.body;
-    //   console.log(data);
-    //   const filter = { roomId: id };
-    //   const updateDoc = {
-    //     $set: {
-    //       review: data.review,
-    //       rating: data.rating,
-    //     },
-    //   };
-    //   const options = { upsert: true };
-    //   const result = await ServiceCollection.updateOne(
-    //     filter,
-    //     updateDoc,
-    //     options
-    //   );
-    //   res.send(result);
-    // });
-    // get one data for update
-    // app.get('/services/s/:id', async (req, res) => {
-    //   const id = req.params.id;
-    //   const query = { roomId: id };
-    //   const result = await ServiceCollection.findOne(query);
-    //   res.send(result);
-    // });
-
     await client.db('admin').command({ ping: 1 });
     console.log(
       'Pinged your deployment. You successfully connected to MongoDB!'
