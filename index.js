@@ -220,29 +220,29 @@ async function run() {
     });
 
     // get only first 6 data for home page
-    app.get('/services/s', async (req, res) => {
-      let sortObj = {};
+    // app.get('/services/s', async (req, res) => {
+    //   let sortObj = {};
 
-      const sortField = req.query.sortField;
-      const sortOrder = req.query.sortOrder;
+    //   const sortField = req.query.sortField;
+    //   const sortOrder = req.query.sortOrder;
 
-      const limit = 6;
+    //   const limit = 6;
 
-      const skip = 0;
+    //   const skip = 0;
 
-      if (sortField && sortOrder) {
-        sortObj[sortField] = sortOrder;
-      }
+    //   if (sortField && sortOrder) {
+    //     sortObj[sortField] = sortOrder;
+    //   }
 
-      const cursor = ServiceCollection.find()
-        .skip(skip)
-        .limit(limit)
-        .sort(sortObj);
+    //   const cursor = ServiceCollection.find()
+    //     .skip(skip)
+    //     .limit(limit)
+    //     .sort(sortObj);
 
-      const result = await cursor.toArray();
-      const total = await ServiceCollection.countDocuments();
-      res.send({ total, result });
-    });
+    //   const result = await cursor.toArray();
+    //   const total = await ServiceCollection.countDocuments();
+    //   res.send({ total, result });
+    // });
 
     // update review and rating in
     // app.patch('/services/s/:id', async (req, res) => {
