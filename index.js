@@ -193,7 +193,7 @@ async function run() {
       res.send(result);
     });
     // update date in booking page
-    app.patch('/bookings/s/:id', async (req, res) => {
+    app.put('/bookings/s/:id', async (req, res) => {
       const id = req.params.id;
       const data = req.body;
       console.log(data);
@@ -211,6 +211,39 @@ async function run() {
       );
       res.send(result);
     });
+    // get data for booking update date
+    app.get('/bookings/s/:id', async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await bookingCollection.findOne(query);
+      res.send(result);
+    });
+
+    // get only first 6 data for home page
+    app.get('/services/s', async (req, res) => {
+      let sortObj = {};
+
+      const sortField = req.query.sortField;
+      const sortOrder = req.query.sortOrder;
+
+      const limit = 6;
+
+      const skip = 0;
+
+      if (sortField && sortOrder) {
+        sortObj[sortField] = sortOrder;
+      }
+
+      const cursor = ServiceCollection.find()
+        .skip(skip)
+        .limit(limit)
+        .sort(sortObj);
+
+      const result = await cursor.toArray();
+      const total = await ServiceCollection.countDocuments();
+      res.send({ total, result });
+    });
+
     // update review and rating in
     // app.patch('/services/s/:id', async (req, res) => {
     //   const id = req.params.id;
