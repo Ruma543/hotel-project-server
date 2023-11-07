@@ -9,7 +9,10 @@ const port = process.env.PORT || 5000;
 
 app.use(
   cors({
-    origin: ['http://localhost:5173', 'http://localhost:5174'],
+    origin: [
+      'hotel-project-client.web.app',
+      'hotel-project-client.firebaseapp.com',
+    ],
     credentials: true,
   })
 );
@@ -45,7 +48,7 @@ const client = new MongoClient(uri, {
 
 async function run() {
   try {
-    await client.connect();
+    // await client.connect();
 
     const ServiceCollection = client.db('hotelDB').collection('services');
     const reviewCollection = client.db('hotelDB').collection('reviews');
